@@ -19,10 +19,11 @@
 
 DEP_LIBS="-lssl"
 NOSSL=0
+FOTA=0
 SPI_MODE="DIO"
 
-export PATH=/hdd2/Espressif/xtensa-lx106-elf/bin:$PATH
 export COMPILE=gcc
+export SRC_ROOT=`pwd`
 
 case $1 in
    "wifisocket")
@@ -164,6 +165,18 @@ case $1 in
       FLASH_SIZE="2048"
       DEP_LIBS="-lpwm -lssl"
    ;;
+   "rgb_aqua")
+      SPI_MODE="QIO"
+      FLASH_SIZE="4096"
+      DEP_LIBS="-lpwm -lssl"
+      FOTA=1
+   ;;
+   "dimmer_aqua")
+      SPI_MODE="QIO"
+      FLASH_SIZE="4096"
+      DEP_LIBS="-lpwm -lssl"
+      FOTA=1
+   ;;
    "h801")
      DEP_LIBS="-lpwm -lssl"
      FOTA=1
@@ -193,6 +206,8 @@ case $1 in
    echo "              EgyIOT";
    echo "              dimmer";
    echo "              rgbw_wroom";
+   echo "              rgb_aqua";
+   echo "              dimmer_aqua";
    echo "              h801";
    echo "              lightswitch_x2";
    echo "              lightswitch_x2_54";
@@ -207,7 +222,7 @@ case $1 in
    
 esac 
 
-CFG_SECTOR=0x3C
+CFG_SECTOR=0x7C
 
 case $FLASH_SIZE in
    "512")
@@ -222,19 +237,21 @@ case $FLASH_SIZE in
    ;;
    *)
      FLASH_SIZE="1024"
+     CFG_SECTOR=0x7C
      SPI_SIZE_MAP=2
    ;;
 esac
 
 
-export SDK_PATH=/hdd2/Espressif/ESP8266_NONOS_SDK154
-export BIN_PATH=/hdd2/Espressif/ESP8266_BIN154
 LD_DIR=sdk154
-
+export SDK_PATH=${ESP_SDK_PATH}
 #export SDK_PATH=/hdd2/Espressif/ESP8266_NONOS_SDK210
 #export BIN_PATH=/hdd2/Espressif/ESP8266_NONOS_SDK210
 #LD_DIR=sdk210
-
+cp ${SDK_PATH}/bin/boot_v1.2.bin bin/
+cp ${SDK_PATH}/bin/boot_v1.5.bin bin/
+cp ${SDK_PATH}/bin/esp_init_data_default.bin bin/
+cp ${SDK_PATH}/bin/blank.bin bin/
 
 make clean
 
@@ -269,17 +286,15 @@ if [ "$FOTA" -eq 1 ]; then
       ;;
   esac
 
-   make SUPLA_DEP_LIBS="$DEP_LIBS" FOTA="$FOTA" BOARD=$1 CFG_SECTOR="$CFG_SECTOR" BOOT=new APP="$APP" SPI_SPEED=40 SPI_MODE="$SPI_MODE" SPI_SIZE_MAP="$SPI_SIZE_MAP" $EXTRA && \
-   cp $BIN_PATH/upgrade/user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin /media/sf_Public/"$BOARD_NAME"_user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin && \
-   cp $SDK_PATH/bin/boot_v1.5.bin /media/sf_Public/boot_v1.5.bin
+   make SUPLA_DEP_LIBS="$DEP_LIBS" FOTA="$FOTA" BOARD=$1 CFG_SECTOR="$CFG_SECTOR" BOOT=new APP="$APP" SPI_SPEED=40 SPI_MODE="$SPI_MODE" SPI_SIZE_MAP="$SPI_SIZE_MAP" $EXTRA #&& \
+   #cp $BIN_PATH/upgrade/user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin /media/sf_Public/"$BOARD_NAME"_user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin && \
+   #cp $SDK_PATH/bin/boot_v1.5.bin /media/sf_Public/boot_v1.5.bin
 
 else
 
-   cp ./ld/"$LD_DIR"/"$FLASH_SIZE"_eagle.app.v6.ld $SDK_PATH/ld/eagle.app.v6.ld || exit 1
-
-   make SUPLA_DEP_LIBS="$DEP_LIBS" BOARD=$1 CFG_SECTOR=$CFG_SECTOR BOOT=new APP=0 SPI_SPEED=40 SPI_MODE="$SPI_MODE" SPI_SIZE_MAP="$SPI_SIZE_MAP" $EXTRA && \
-   cp $BIN_PATH/eagle.flash.bin /media/sf_Public/"$BOARD_NAME"_"$FLASH_SIZE"_eagle.flash.bin && \
-   cp $BIN_PATH/eagle.irom0text.bin /media/sf_Public/"$BOARD_NAME"_"$FLASH_SIZE"_eagle.irom0text.bin &&
+   make SUPLA_DEP_LIBS="$DEP_LIBS" BOARD=$1 CFG_SECTOR=$CFG_SECTOR BOOT=new APP=0 SPI_SPEED=40 SPI_MODE="$SPI_MODE" SPI_SIZE_MAP="$SPI_SIZE_MAP" $EXTRA #&& \
+   #cp $BIN_PATH/eagle.flash.bin /media/sf_Public/"$BOARD_NAME"_"$FLASH_SIZE"_eagle.flash.bin && \
+   #cp $BIN_PATH/eagle.irom0text.bin /media/sf_Public/"$BOARD_NAME"_"$FLASH_SIZE"_eagle.irom0text.bin &&
    
    exit 0
 fi

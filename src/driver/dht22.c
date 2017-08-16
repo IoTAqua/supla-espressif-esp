@@ -80,7 +80,10 @@ bool DHTRead(DHT_Sensor *sensor, DHT_Sensor_Data* output)
 
 	// Wake up device, 250ms of high
 	GPIO_OUTPUT_SET(pin, 1);
-	sleepms(250);
+	sleepms(60);
+	sleepms(60);
+	sleepms(60);
+	sleepms(60);
 	// Hold low for 20ms
 	GPIO_OUTPUT_SET(pin, 0);
 	sleepms(20);

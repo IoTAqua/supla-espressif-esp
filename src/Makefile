@@ -12,8 +12,8 @@
 #     a generated lib/image xxx.a ()
 #
 TARGET = eagle
-#FLAVOR = release
-FLAVOR = debug
+FLAVOR = release
+#FLAVOR = debug
 
 
 EXTRA_CCFLAGS += -DESP8266 -D__SINGLE_THREAD -D__EH_DISABLED -D__BOARD_$(BOARD) -DCFG_SECTOR=$(CFG_SECTOR) -DNOSSL=$(NOSSL)
@@ -37,10 +37,6 @@ endif # } PDIR
 ifeq ($(FOTA), 1)
 	EXTRA_CCFLAGS += -D__FOTA=1
 endif #FOTA 
-
-LDDIR = $(SDK_PATH)/ld
-
-#CCFLAGS += -Os
 
 CCFLAGS = -Os -ggdb -std=gnu99 -Werror -Wpointer-arith -Wundef -Wall -Wl,-EL -fno-inline-functions \
 		-nostdlib -mlongcalls -mtext-section-literals  -D__ets__ -DICACHE_FLASH \
@@ -91,10 +87,6 @@ LINKFLAGS_eagle.app.v6 = \
 	$(DEP_LIBS_eagle.app.v6)					\
 	-Wl,--end-group
 
-DEPENDS_eagle.app.v6 = \
-                $(LD_FILE) \
-                $(LDDIR)/eagle.rom.addr.v6.ld
-
 #############################################################
 # Configuration i.e. compile options etc.
 # Target specific stuff (defines etc.) goes in here!
@@ -138,9 +130,7 @@ ifeq ($(FOTA), 1)
 INCLUDES := $(INCLUDES) -I $(PDIR)nettle/include
 endif #FOTA 
 
-
-sinclude $(SDK_PATH)/Makefile
-
+sinclude $(SRC_ROOT)/Makefile.sdk
 
 
 .PHONY: FORCE

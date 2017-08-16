@@ -30,6 +30,7 @@
 #include "supla_esp_cfg.h"
 #include "supla_esp_devconn.h"
 #include "supla_esp_cfgmode.h"
+#include "supla_esp_pwm.h"
 
 #include "supla-dev/log.h"
 
@@ -889,7 +890,7 @@ supla_esp_gpio_input_timer_cb(void *timer_arg) {
 
 						factory_defaults(1);
 						supla_log(LOG_DEBUG, "Factory defaults");
-						os_delay_us(500000);
+						os_delay_us(50000);
 						system_restart();
 					}
 
