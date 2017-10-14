@@ -242,6 +242,7 @@ case $FLASH_SIZE in
    ;;
 esac
 
+make -C ../tools
 
 LD_DIR=sdk154
 export SDK_PATH=${ESP_SDK_PATH}
@@ -286,7 +287,8 @@ if [ "$FOTA" -eq 1 ]; then
       ;;
   esac
 
-   make SUPLA_DEP_LIBS="$DEP_LIBS" FOTA="$FOTA" BOARD=$1 CFG_SECTOR="$CFG_SECTOR" BOOT=new APP="$APP" SPI_SPEED=40 SPI_MODE="$SPI_MODE" SPI_SIZE_MAP="$SPI_SIZE_MAP" $EXTRA #&& \
+   make SUPLA_DEP_LIBS="$DEP_LIBS" FOTA="$FOTA" BOARD=$1 CFG_SECTOR="$CFG_SECTOR" BOOT=new APP="$APP" SPI_SPEED=40 SPI_MODE="$SPI_MODE" SPI_SIZE_MAP="$SPI_SIZE_MAP" $EXTRA && \
+   ../tools/sigtool -k bin/rsakey -s bin/upgrade/user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin
    #cp $BIN_PATH/upgrade/user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin /media/sf_Public/"$BOARD_NAME"_user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin && \
    #cp $SDK_PATH/bin/boot_v1.5.bin /media/sf_Public/boot_v1.5.bin
 
