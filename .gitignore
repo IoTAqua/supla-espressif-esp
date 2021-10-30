@@ -9,6 +9,7 @@ tmp/
 *.bak
 *.swp
 *~.nib
+*.out
 local.properties
 .settings/
 .loadpath
@@ -60,3 +61,4 @@ valgrind-suppressions.cfg
 # Build output
 firmware/
 src/.output/
+tools/sigtool

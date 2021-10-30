@@ -60,6 +60,14 @@
 
 #include "board/dimmer.c"
 
+#elif defined(__BOARD_rgb_aqua)
+
+#include "board/rgb_aqua.c"
+
+#elif defined(__BOARD_dimmer_aqua)
+
+#include "board/dimmer_aqua.c"
+
 #elif defined(__BOARD_h801)
 
 #include "board/h801.c"

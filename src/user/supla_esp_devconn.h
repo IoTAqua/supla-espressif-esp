@@ -93,6 +93,9 @@ void DEVCONN_ICACHE_FLASH
 supla_esp_channel_set_rgbw_value(int ChannelNumber, int Color, char ColorBrightness, char Brightness, char smoothly, char send_value_changed);
 #endif /*RGBW_ONOFF_SUPPORT*/
 
+void DEVCONN_ICACHE_FLASH
+supla_esp_channel_rgbw_value_changed(int channel_number, int color, char color_brightness, char brightness);
+
 #endif
 
 void DEVCONN_ICACHE_FLASH
