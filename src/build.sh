@@ -216,6 +216,7 @@ case $FLASH_SIZE in
    ;;
 esac
 
+make -C ../tools
 OUTDIR=../firmware
 export SDK_PATH=/hdd2/Espressif/sdk_3x/ESP8266_NONOS_SDK-3.0.4
 export BIN_PATH=/hdd2/Espressif/sdk_3x/ESP8266_BIN304
@@ -275,6 +276,7 @@ if [ "$FOTA" -eq 1 ]; then
   esac
 
    make SUPLA_DEP_LIBS="$DEP_LIBS" FOTA="$FOTA" BOARD=$1 CFG_SECTOR="$CFG_SECTOR" BOOT=new APP="$APP" SPI_SPEED=40 SPI_MODE="$SPI_MODE" SPI_SIZE_MAP="$SPI_SIZE_MAP" __EXTRA_CCFLAGS="$EXTRA_CCFLAGS" && \
+   ../tools/sigtool -k bin/rsakey -s bin/upgrade/user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin
    cp $BIN_PATH/upgrade/user"$APP"."$FLASH_SIZE".new."$SPI_SIZE_MAP".bin "$OUTDIR"/"$BOARD_NAME"_user"$APP"."$FLASH_SIZE"_"$SPI_MODE".new."${SPI_SIZE_MAP}${OUTPUT_FILENAME_SUFFIX}".sdk3x.bin && \
    cp $SDK_PATH/bin/boot_v1.6.bin $OUTDIR/boot_v1.6.bin || exit $?
 
